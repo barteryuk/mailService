@@ -1,0 +1,29 @@
+{
+  "name": "barteryuk-mailService",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R min",
+    "dev": "NODE_ENV=development nodemon bin/server.js",
+    "start": "NODE_ENV=production node bin/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barteryuk/mailService.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barteryuk/mailService/issues"
+  },
+  "homepage": "https://github.com/barteryuk/mailService#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemailer": "^6.4.8"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
