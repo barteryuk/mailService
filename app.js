@@ -4,27 +4,31 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 //   const db = require("./config/database");
-const router = require("./routes");
+// const router = require("./routes");
 //   const errorHandler = require("./middlewares/errorhandler");
 
 const nodemailer = require("nodemailer");
+const body = require("./message");
+
 var transport = {
   service: "gmail",
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    user: "barteryukhacktiv8@gmail.com",
+    pass: "hacktiv8FINAL!",
   },
 };
 
 var transporter = nodemailer.createTransport(transport);
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("All works fine, congratz!");
-  }
-});
+if (process.env.NODE_ENV !== "test") {
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Nodemailer connected to GMAIL");
+    }
+  });
+}
 
 const app = express();
 
@@ -34,27 +38,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(router);
 //   app.use(errorHandler);
-
-app.post("/send", (req, res, next) => {
-  const name = req.body.name || "test";
-  const email = req.body.email || "robinsalim222@gmail.com";
-  const message = req.body.messageHtml || "testing nodemailer";
+app.get("/", (req, res, next) => {
+  res.send("welcome to mailService");
+});
+app.post("/sendNewBid", (req, res, next) => {
+  const { email } = req.body;
 
   var mail = {
-    from: name,
+    from: `Barteryuk <barteryukhacktiv8@gmail.com>`,
     to: email,
-    subject: "[Barteryuk] - You got a new bid invite!!!",
-    html: message,
+    subject: "[Barteryuk] - You got a new bid!!!",
+    html: body,
+    attachments: [
+      {
+        filename: "logo.png",
+        path: __dirname + "/assets/logo.png",
+        cid: "logo",
+      },
+    ],
   };
 
   transporter.sendMail(mail, (err, data) => {
     if (err) {
-      res.json({
-        msg: "fail",
+      res.status(500).json({
+        status: 500,
+        message: "Failed sending email to: " + email,
       });
     } else {
-      res.json({
-        msg: "success",
+      res.status(200).json({
+        status: 200,
+        message: "Email sent to: " + email,
       });
     }
   });
